@@ -15,3 +15,9 @@
 ## 🚀 Instalación y Configuración  
 ### 🔹 **1. Clonar el repositorio**
 ```bash
+
+2. Instalar dependencias
+3. Configurar Variables de Entorno
+4. Ejecutar el proyecto en modo desarrollo
+  npm run dev
+
