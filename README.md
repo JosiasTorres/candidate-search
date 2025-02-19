@@ -2,11 +2,6 @@
 
 🔍 **Candidate Search** es una aplicación web que permite buscar usuarios en GitHub, aceptarlos o rechazarlos, y guardar los seleccionados para futuras referencias.  
 
-## 📸 Capturas de Pantalla  
-_Agrega aquí imágenes del proyecto si lo deseas._
-
----
-
 ## 🛠️ Tecnologías Utilizadas  
 - **React + Vite** ⚛️  
 - **TypeScript**  
