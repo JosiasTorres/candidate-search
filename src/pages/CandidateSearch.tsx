@@ -31,23 +31,23 @@ const CandidateSearch: React.FC = () => {
     });
   }, []);
 
-  // ✅ Guardar un candidato en localStorage
+  // ✅ Guardar un candidato en localStorage evitando duplicados
   const handleAccept = () => {
     const acceptedCandidate = candidates[currentIndex];
 
     if (acceptedCandidate) {
-      // 🛠 Recuperar los candidatos guardados antes de actualizar
-      const storedCandidates = localStorage.getItem("savedCandidates");
-      const previousCandidates = storedCandidates ? JSON.parse(storedCandidates) : [];
+      // ⚡ Verificar si ya está guardado
+      if (!savedCandidates.some((c) => c.login === acceptedCandidate.login)) {
+        const updatedSavedCandidates = [...savedCandidates, acceptedCandidate];
 
-      // ⚡ Agregar el nuevo candidato a la lista y actualizar el estado
-      const updatedSavedCandidates = [...previousCandidates, acceptedCandidate];
-      setSavedCandidates(updatedSavedCandidates);
+        // 🔥 Actualizar estado y localStorage
+        setSavedCandidates(updatedSavedCandidates);
+        localStorage.setItem("savedCandidates", JSON.stringify(updatedSavedCandidates));
 
-      // 🔥 Guardar en localStorage
-      localStorage.setItem("savedCandidates", JSON.stringify(updatedSavedCandidates));
-
-      console.log("✅ Candidato guardado:", acceptedCandidate);
+        console.log("✅ Candidato guardado:", acceptedCandidate);
+      } else {
+        console.warn("⚠️ Candidato ya guardado:", acceptedCandidate.login);
+      }
     }
 
     setCurrentIndex((prev) => prev + 1);
@@ -70,17 +70,20 @@ const CandidateSearch: React.FC = () => {
   const currentCandidate = candidates[currentIndex];
 
   return (
-    <Candidate
-      name={currentCandidate.name || currentCandidate.login}
-      username={currentCandidate.login}
-      location={currentCandidate.location}
-      avatar={currentCandidate.avatar_url}
-      email={currentCandidate.email}
-      html_url={currentCandidate.html_url}
-      company={currentCandidate.company}
-      onAccept={handleAccept}
-      onReject={handleReject}
-    />
+    <div>
+      <Candidate
+        name={currentCandidate.name || currentCandidate.login}
+        username={currentCandidate.login}
+        location={currentCandidate.location}
+        avatar={currentCandidate.avatar_url}
+        email={currentCandidate.email}
+        html_url={currentCandidate.html_url}
+        company={currentCandidate.company}
+        onAccept={handleAccept}
+        onReject={handleReject}
+      />
+      <h3>✅ Candidatos Guardados: {savedCandidates.length}</h3>
+    </div>
   );
 };
 
