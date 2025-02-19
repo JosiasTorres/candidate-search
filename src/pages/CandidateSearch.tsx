@@ -17,33 +17,43 @@ const CandidateSearch: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [savedCandidates, setSavedCandidates] = useState<GithubUser[]>([]);
 
-  // Cargar candidatos guardados desde LocalStorage al inicio
+  // 📌 Cargar candidatos guardados al inicio
   useEffect(() => {
     const storedCandidates = localStorage.getItem("savedCandidates");
     if (storedCandidates) {
       setSavedCandidates(JSON.parse(storedCandidates));
     }
 
-    // Obtener candidatos desde la API de GitHub
+    // 🔍 Buscar candidatos de GitHub
     searchGithub().then((data) => {
       console.log("Candidatos obtenidos:", data);
       setCandidates(data);
     });
   }, []);
 
-  // Guardar candidatos en LocalStorage cada vez que se actualicen
-  useEffect(() => {
-    localStorage.setItem("savedCandidates", JSON.stringify(savedCandidates));
-  }, [savedCandidates]);
-
+  // ✅ Guardar un candidato en localStorage
   const handleAccept = () => {
     const acceptedCandidate = candidates[currentIndex];
-    console.log("✅ Candidato aceptado:", acceptedCandidate);
 
-    setSavedCandidates((prev) => [...prev, acceptedCandidate]);
+    if (acceptedCandidate) {
+      // 🛠 Recuperar los candidatos guardados antes de actualizar
+      const storedCandidates = localStorage.getItem("savedCandidates");
+      const previousCandidates = storedCandidates ? JSON.parse(storedCandidates) : [];
+
+      // ⚡ Agregar el nuevo candidato a la lista y actualizar el estado
+      const updatedSavedCandidates = [...previousCandidates, acceptedCandidate];
+      setSavedCandidates(updatedSavedCandidates);
+
+      // 🔥 Guardar en localStorage
+      localStorage.setItem("savedCandidates", JSON.stringify(updatedSavedCandidates));
+
+      console.log("✅ Candidato guardado:", acceptedCandidate);
+    }
+
     setCurrentIndex((prev) => prev + 1);
   };
 
+  // ❌ Rechazar candidato (solo avanza al siguiente)
   const handleReject = () => {
     console.log("❌ Candidato rechazado:", candidates[currentIndex]);
     setCurrentIndex((prev) => prev + 1);
